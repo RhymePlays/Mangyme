@@ -1,0 +1,15 @@
+{
+  "name": "mangyme",
+  "version": "2022.6.1",
+  "description": "Just a custom Manga Reader catered to my taste.",
+  "main": "main.js",
+  "scripts": {
+    "test": "node main.js",
+    "run": "electron ."
+  },
+  "author": "Isfar Tausif",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^19.0.3"
+  }
+}
