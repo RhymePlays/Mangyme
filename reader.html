@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Reader</title>
+    <script defer src="/reader.js"></script>
+    <style>
+        /* Global */
+        body{
+            margin: 0;
+            background-color: #0e0e0e;
+            font-family:  "Open Sans", "Roboto", Arial, Helvetica, sans-serif;
+            overflow: hidden;
+        }
+
+        /* Reader */
+        #mangaPage{
+            position: absolute;
+            height: 95%;
+            width: auto;
+            background-color: red;
+            border-radius: 5px;
+        }
+        #legend{
+            position: absolute;
+            bottom: 10px;
+            background-color: rgba(255, 255, 255, 0.6);
+            padding: 5px;
+            border-radius: 6px;
+            opacity: 0.75;
+            font-size: 12px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <image id="mangaPage">
+    <div id="legend">50/50</div>
+    <div id="control"></div>
+</body>
+</html>
