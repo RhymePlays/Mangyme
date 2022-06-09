@@ -8,11 +8,15 @@ const createWindow = () => {
         height: height > 400? (height-50) : 400,
         minWidth: 400,
         minHeight: 400,
-        autoHideMenuBar: true
+        autoHideMenuBar: true,
+        webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false,
+        }
     })
 
     win.loadFile('reader.html')
-    // win.webContents.openDevTools()
+    win.webContents.openDevTools()
 }
   
 app.on("ready", createWindow)

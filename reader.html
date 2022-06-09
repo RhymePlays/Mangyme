@@ -12,8 +12,9 @@
         body{
             margin: 0;
             background-color: #0e0e0e;
-            font-family:  "Open Sans", "Roboto", Arial, Helvetica, sans-serif;
+            font-family:  "Montserrat", "Roboto", Arial, Helvetica, sans-serif;
             overflow: hidden;
+            user-select: none;
         }
 
         /* Reader */
@@ -24,21 +25,139 @@
             background-color: red;
             border-radius: 5px;
         }
+        
+        /* UI */
+        #UI{
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
         #legend{
             position: absolute;
             bottom: 10px;
-            background-color: rgba(255, 255, 255, 0.6);
+            background-color: rgba(60, 60, 60, 0.5);
             padding: 5px;
             border-radius: 6px;
             opacity: 0.75;
+            font-family:  "Montserrat", "Roboto", Arial, Helvetica, sans-serif;
             font-size: 12px;
             font-weight: bold;
+            color: white;
         }
+        #progressBar{
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            height: 6px;
+            background: linear-gradient(90deg, rgba(60, 60, 60, 0.5) 100%, white 100%);
+            opacity: 0.75;
+        }
+        #control{
+            position: absolute;
+            top: 10px;
+            background-color: rgba(60, 60, 60, 0.5);
+            padding: 5px;
+            border-radius: 6px;
+            opacity: 0.75;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }#control svg{
+            padding: 6px;
+            border-radius: 50%;
+            fill: white;
+            transition: 150ms;
+        }#control svg:hover{
+            background: rgb(24, 24, 24);
+            transition: 200ms;
+        }
+
+        
+        /* Library */
+        #libraryBrowser{
+            position: absolute;
+            top: 0px;bottom: 0px;left: 0px;right: 0px;
+            background-color: #0e0e0e;
+            /* display: none; */
+        }#libraryBrowser svg{
+            padding: 6px;
+            border-radius: 50%;
+            fill: white;
+            transition: 150ms;
+        }#libraryBrowser svg:hover{
+            background: rgb(24, 24, 24);
+            transition: 200ms;
+        }
+
+        #libraryTitle{
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            font-family: "Montserrat", "Roboto", Arial, Helvetica, sans-serif;    
+            color: white;
+            font-size: 25px;
+        }
+
+        #libraryCloseBtn{
+            position: absolute;
+            right: 5px;
+            top: 5px;
+        }
+        #libraryOpenDirectoryBtn{
+            position: absolute;
+            right: 45px;
+            top: 5px;    
+        }
+        #libraryItems{
+            position: absolute;
+            left: 10px;
+            right: 10px;
+            top: 75px;
+            bottom: 10px;
+            background-color: #161616;
+            color: white;
+            padding: 5px;
+            border-radius: 5px;
+            font-size: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            overflow-x: hidden;
+            scrollbar-color: #18f018c4;
+        }#libraryItems div{
+            padding: 4px;
+            background-color: transparent;
+            border-radius: 4px;
+            transition: 150ms;
+        }#libraryItems div:hover{
+            background-color: #0e0e0e;
+            transition: 200ms;
+        } 
+        ::-webkit-scrollbar{height: 8px; width: 8px;}
+        ::-webkit-scrollbar-track{background-color: #0e0e0e00;}
+        ::-webkit-scrollbar-thumb{background-color: #2e2e2e;border-radius: 4px}
     </style>
 </head>
 <body>
     <image id="mangaPage">
-    <div id="legend">50/50</div>
-    <div id="control"></div>
+    <div id="UI">
+        <div id="legend"></div>
+        <div id="progressBar"></div>
+        <div id="control">
+            <svg onclick="javascript:openLibraryBrowser()" title="B" xmlns="http://www.w3.org/2000/svg" height="24" width="24"><path d="M8 16H20Q20 16 20 16Q20 16 20 16V4Q20 4 20 4Q20 4 20 4H18V11L15.5 9.5L13 11V4H8Q8 4 8 4Q8 4 8 4V16Q8 16 8 16Q8 16 8 16ZM8 18Q7.175 18 6.588 17.413Q6 16.825 6 16V4Q6 3.175 6.588 2.587Q7.175 2 8 2H20Q20.825 2 21.413 2.587Q22 3.175 22 4V16Q22 16.825 21.413 17.413Q20.825 18 20 18ZM4 22Q3.175 22 2.588 21.413Q2 20.825 2 20V6H4V20Q4 20 4 20Q4 20 4 20H18V22ZM13 4H15.5H18ZM8 4Q8 4 8 4Q8 4 8 4Q8 4 8 4Q8 4 8 4H13H15.5H18H20Q20 4 20 4Q20 4 20 4Q20 4 20 4Q20 4 20 4Z"/></svg>
+            <svg onclick="javascript:loadPage(variables.currentPageIndex + 1)" title="A" xmlns="http://www.w3.org/2000/svg" height="24" width="24"><path d="M12 20 4 12 12 4 13.425 5.4 7.825 11H20V13H7.825L13.425 18.6Z"/></svg>            
+            <svg onclick="javascript:loadPage(variables.currentPageIndex - 1)" title="D" xmlns="http://www.w3.org/2000/svg" height="24" width="24"><path d="M12 20 10.575 18.6 16.175 13H4V11H16.175L10.575 5.4L12 4L20 12Z"/></svg>
+            <svg onclick="javascript:zoomIn()" title="+" xmlns="http://www.w3.org/2000/svg" height="24" width="24"><path d="M19.6 21 13.3 14.7Q12.55 15.3 11.575 15.65Q10.6 16 9.5 16Q6.775 16 4.888 14.113Q3 12.225 3 9.5Q3 6.775 4.888 4.887Q6.775 3 9.5 3Q12.225 3 14.113 4.887Q16 6.775 16 9.5Q16 10.6 15.65 11.575Q15.3 12.55 14.7 13.3L21 19.6ZM9.5 14Q11.375 14 12.688 12.688Q14 11.375 14 9.5Q14 7.625 12.688 6.312Q11.375 5 9.5 5Q7.625 5 6.312 6.312Q5 7.625 5 9.5Q5 11.375 6.312 12.688Q7.625 14 9.5 14ZM10.5 12.5H8.5V10.5H6.5V8.5H8.5V6.5H10.5V8.5H12.5V10.5H10.5Z"/></svg>
+            <svg onclick="javascript:zoomOut()" title="-" xmlns="http://www.w3.org/2000/svg" height="24" width="24"><path d="M19.6 21 13.3 14.7Q12.55 15.3 11.575 15.65Q10.6 16 9.5 16Q6.775 16 4.888 14.113Q3 12.225 3 9.5Q3 6.775 4.888 4.887Q6.775 3 9.5 3Q12.225 3 14.113 4.887Q16 6.775 16 9.5Q16 10.6 15.65 11.575Q15.3 12.55 14.7 13.3L21 19.6ZM9.5 14Q11.375 14 12.688 12.688Q14 11.375 14 9.5Q14 7.625 12.688 6.312Q11.375 5 9.5 5Q7.625 5 6.312 6.312Q5 7.625 5 9.5Q5 11.375 6.312 12.688Q7.625 14 9.5 14ZM7 10.5V8.5H12V10.5Z"/></svg>
+        </div>
+        <div id="libraryBrowser">
+            <span id="libraryTitle">Library</span>
+            <svg id="libraryOpenDirectoryBtn" onclick='javascript:require("child_process").exec(`start "" "${variables.mangaLibrary}"`);' xmlns="http://www.w3.org/2000/svg" height="24" width="24"><path d="M4 20Q3.175 20 2.588 19.413Q2 18.825 2 18V6Q2 5.175 2.588 4.588Q3.175 4 4 4H10L12 6H20Q20.825 6 21.413 6.588Q22 7.175 22 8V18Q22 18.825 21.413 19.413Q20.825 20 20 20ZM4 6V18Q4 18 4 18Q4 18 4 18H20Q20 18 20 18Q20 18 20 18V8Q20 8 20 8Q20 8 20 8H11.175L9.175 6H4Q4 6 4 6Q4 6 4 6ZM4 6Q4 6 4 6Q4 6 4 6V8Q4 8 4 8Q4 8 4 8V18Q4 18 4 18Q4 18 4 18Q4 18 4 18Q4 18 4 18Z"/></svg>
+            <svg id="libraryCloseBtn" onclick="javascript:closeLibraryBrowser()" xmlns="http://www.w3.org/2000/svg" height="24" width="24"><path d="M6.4 19 5 17.6 10.6 12 5 6.4 6.4 5 12 10.6 17.6 5 19 6.4 13.4 12 19 17.6 17.6 19 12 13.4Z"/></svg>
+            <div id="libraryItems"></div>
+        </div>
+    </div>
 </body>
 </html>
