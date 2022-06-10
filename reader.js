@@ -1,9 +1,10 @@
-const fs = require("fs")
+const fs = require("fs");
 
 /* ------Variables Start------ */
 var variables = {
     mangaPageElem: document.getElementById("mangaPage"),
     pageZoomLevel: 95,
+    movingPower: 10,
     totalPages: 0,
     currentPageIndex: 0,
     currentChapterIndex: 0,
@@ -40,12 +41,12 @@ function zoomOut(){
 }
 // Cursor Follow
 window.addEventListener("keydown", (keyData)=>{
-    if(keyData.code=="ShiftLeft"){
+    if(keyData.code=="ShiftLeft"||keyData.code=="ShiftRight"||keyData.code=="Space"){
         window.addEventListener("mousemove", setPosOnCursor);
     }
 });
 window.addEventListener("keyup", (keyData)=>{
-    if(keyData.code=="ShiftLeft"){
+    if(keyData.code=="ShiftLeft"||keyData.code=="ShiftRight"||keyData.code=="Space"){
         window.removeEventListener("mousemove", setPosOnCursor);
     }
 });
@@ -63,8 +64,12 @@ window.addEventListener("load", ()=>{
     openLibraryBrowser();
 });
 window.addEventListener("keypress", (keyData)=>{
-    if (keyData.code=="KeyA"){loadPage(variables.currentPageIndex + 1);}
-    else if (keyData.code=="KeyD"){loadPage(variables.currentPageIndex - 1);}
+    if (keyData.code=="KeyQ"){loadPage(variables.currentPageIndex + 1);}
+    else if (keyData.code=="KeyE"){loadPage(variables.currentPageIndex - 1);}
+    else if (keyData.code=="KeyW"){moveImage("up")}
+    else if (keyData.code=="KeyS"){moveImage("down")}
+    else if (keyData.code=="KeyD"){moveImage("right")}
+    else if (keyData.code=="KeyA"){moveImage("left")}
     else if (keyData.code=="NumpadAdd"||keyData.code=="Equal"){zoomIn();}
     else if (keyData.code=="NumpadSubtract"||keyData.code=="Minus"){zoomOut();}
     else if (keyData.code=="KeyB"){variables.isLibraryOpen == false ? openLibraryBrowser() : closeLibraryBrowser();}
@@ -72,11 +77,25 @@ window.addEventListener("keypress", (keyData)=>{
 /* ------Event Listeners End------ */
 
 
-
 /* ------Functions Start------ */
 function updateLegend(){
     document.getElementById("legend").innerText = `${variables.seriesName} ➡️ ${variables.chapterName} ➡️ ${variables.currentPageIndex+1}/${variables.totalPages}`;
     document.getElementById("progressBar").style.background = `linear-gradient(90deg, rgba(60, 60, 60, 0.5) ${(1-(variables.currentPageIndex/(variables.totalPages-1)))*100}%, white ${(1-(variables.currentPageIndex/(variables.totalPages-1)))*100}%)`
+}
+
+function moveImage(direction){
+    if (direction=="up"){
+        variables.mangaPageElem.style.top = `${variables.mangaPageElem.getBoundingClientRect().top-variables.movingPower}px`;
+    }
+    if (direction=="down"){
+        variables.mangaPageElem.style.top = `${variables.mangaPageElem.getBoundingClientRect().top+variables.movingPower}px`;
+    }
+    if (direction=="left"){
+        variables.mangaPageElem.style.left = `${variables.mangaPageElem.getBoundingClientRect().left-variables.movingPower}px`;
+    }
+    if (direction=="right"){
+        variables.mangaPageElem.style.left = `${variables.mangaPageElem.getBoundingClientRect().left+variables.movingPower}px`;
+    }
 }
 
 function openLibraryBrowser(){populateSeries();document.getElementById("libraryBrowser").style.display = "block";variables.isLibraryOpen = true;}
@@ -94,7 +113,6 @@ function populateSeries(){
         document.getElementById("libraryItems").append(item);
     }
 }
-
 function populateChapter(series){
     variables.seriesName = series.currentTarget.arg;
     variables.chapterList = fs.readdirSync(variables.mangaLibrary+"\\"+variables.seriesName).sort();
@@ -108,9 +126,12 @@ function populateChapter(series){
         document.getElementById("libraryItems").append(item);
     }
 }
-
 function loadChapter(chapter){
+    let lastPageFirst = false
     if (typeof(chapter) == "string"){
+        if (variables.chapterList.indexOf(chapter) == variables.currentChapterIndex-1){
+            lastPageFirst = true
+        }
         variables.chapterName = chapter
     }else{
         variables.chapterName = chapter.currentTarget.arg;
@@ -122,12 +143,11 @@ function loadChapter(chapter){
     }
     variables.pageList.sort()
     variables.totalPages = variables.pageList.length;
-    variables.currentPageIndex = 0;
+    lastPageFirst? variables.currentPageIndex = variables.totalPages-1 : variables.currentPageIndex = 0;
     variables.currentChapterIndex = variables.chapterList.indexOf(variables.chapterName);
     loadPage(variables.currentPageIndex);
     closeLibraryBrowser();
 }
-
 function loadPage(index){
     if (index <= variables.totalPages-1 && index >= 0){
         variables.currentPageIndex = index;

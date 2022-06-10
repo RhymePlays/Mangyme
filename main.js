@@ -9,6 +9,7 @@ const createWindow = () => {
         minWidth: 400,
         minHeight: 400,
         autoHideMenuBar: true,
+        icon: __dirname+"\\assets\\logo.png",
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
