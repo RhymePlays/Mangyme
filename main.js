@@ -17,7 +17,7 @@ const createWindow = () => {
     })
 
     win.loadFile('reader.html')
-    win.webContents.openDevTools()
+    // win.webContents.openDevTools()
 }
   
 app.on("ready", createWindow)

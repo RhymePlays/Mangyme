@@ -1,15 +1,16 @@
 {
   "name": "mangyme",
-  "version": "2022.6.1",
+  "version": "2022.6.4",
   "description": "Just a custom Manga Reader catered to my taste.",
   "main": "main.js",
   "scripts": {
-    "test": "node main.js",
-    "run": "electron ."
+    "start": "electron .",
+    "build": "electron-packager . --asar --icon=\"z:/RhymePlays Production/Javascript Projects/Mangyme/assets/logo.ico\" --name=\"Mangyme\""
   },
   "author": "Isfar Tausif",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^19.0.3"
+    "electron": "^19.0.3",
+    "electron-packager": "^15.5.1"
   }
 }

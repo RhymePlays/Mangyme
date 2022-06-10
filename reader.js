@@ -16,6 +16,19 @@ var variables = {
     chapterList: [],
     pageList: [],
     allowedPageFormats: ["png", "jpg", "jpeg", "gif", "webp", "bmp", "ico"],
+    controls: {
+        nextPage: "KeyQ",
+        previousPage: "KeyE",
+        moveUp: "KeyW",
+        modeLeft: "KeyA",
+        moveDown: "KeyS",
+        moveRight: "KeyD",
+        zoomIn: "NumpadAdd",
+        zoomInAlt: "Equal",
+        zoomOut: "NumpadSubtract",
+        zoomOutAlt: "Minus",
+        toggleLibraryBrowser: "KeyB",
+    }
 }
 /* ------Variables End------ */
 
@@ -64,15 +77,15 @@ window.addEventListener("load", ()=>{
     openLibraryBrowser();
 });
 window.addEventListener("keypress", (keyData)=>{
-    if (keyData.code=="KeyQ"){loadPage(variables.currentPageIndex + 1);}
-    else if (keyData.code=="KeyE"){loadPage(variables.currentPageIndex - 1);}
-    else if (keyData.code=="KeyW"){moveImage("up")}
-    else if (keyData.code=="KeyS"){moveImage("down")}
-    else if (keyData.code=="KeyD"){moveImage("right")}
-    else if (keyData.code=="KeyA"){moveImage("left")}
-    else if (keyData.code=="NumpadAdd"||keyData.code=="Equal"){zoomIn();}
-    else if (keyData.code=="NumpadSubtract"||keyData.code=="Minus"){zoomOut();}
-    else if (keyData.code=="KeyB"){variables.isLibraryOpen == false ? openLibraryBrowser() : closeLibraryBrowser();}
+    if (keyData.code==variables.controls.nextPage){loadPage(variables.currentPageIndex + 1);}
+    else if (keyData.code==variables.controls.previousPage){loadPage(variables.currentPageIndex - 1);}
+    else if (keyData.code==variables.controls.moveUp){moveImage("up")}
+    else if (keyData.code==variables.controls.moveDown){moveImage("down")}
+    else if (keyData.code==variables.controls.moveRight){moveImage("right")}
+    else if (keyData.code==variables.controls.modeLeft){moveImage("left")}
+    else if (keyData.code==variables.controls.zoomIn||keyData.code==variables.controls.zoomInAlt){zoomIn();}
+    else if (keyData.code==variables.controls.zoomOut||keyData.code==variables.controls.zoomOutAlt){zoomOut();}
+    else if (keyData.code==variables.controls.toggleLibraryBrowser){variables.isLibraryOpen == false ? openLibraryBrowser() : closeLibraryBrowser();}
 });
 /* ------Event Listeners End------ */
 
@@ -101,41 +114,33 @@ function moveImage(direction){
 function openLibraryBrowser(){populateSeries();document.getElementById("libraryBrowser").style.display = "block";variables.isLibraryOpen = true;}
 function closeLibraryBrowser(){document.getElementById("libraryBrowser").style.display = "none";variables.isLibraryOpen = false;}
 
+function createLibraryItem(text, onClick){
+    let item = document.createElement("div");
+    item.innerText = text;
+    item.setAttribute("onclick", `javascript:${onClick}`);
+    return item;
+}
+
 function populateSeries(){
     variables.seriesList = fs.readdirSync(variables.mangaLibrary).sort();
     document.getElementById("libraryTitle").innerText = "Library - Mangas";
     document.getElementById("libraryItems").innerHTML = "";
     for (let index in variables.seriesList){
-        let item = document.createElement("div");
-        item.innerText = variables.seriesList[index];
-        item.addEventListener("click", populateChapter);
-        item.arg = variables.seriesList[index];
-        document.getElementById("libraryItems").append(item);
+        document.getElementById("libraryItems").append(createLibraryItem(variables.seriesList[index], `populateChapter("${variables.seriesList[index]}")`));
     }
 }
 function populateChapter(series){
-    variables.seriesName = series.currentTarget.arg;
+    variables.seriesName = series;
     variables.chapterList = fs.readdirSync(variables.mangaLibrary+"\\"+variables.seriesName).sort();
     document.getElementById("libraryTitle").innerText = "Library - Chapters";
     document.getElementById("libraryItems").innerHTML = "";
     for (let index in variables.chapterList){
-        let item = document.createElement("div");
-        item.innerText = variables.chapterList[index];
-        item.addEventListener("click", loadChapter);
-        item.arg = variables.chapterList[index];
-        document.getElementById("libraryItems").append(item);
+        document.getElementById("libraryItems").append(createLibraryItem(variables.chapterList[index], `loadChapter("${variables.chapterList[index]}")`));
     }
 }
 function loadChapter(chapter){
-    let lastPageFirst = false
-    if (typeof(chapter) == "string"){
-        if (variables.chapterList.indexOf(chapter) == variables.currentChapterIndex-1){
-            lastPageFirst = true
-        }
-        variables.chapterName = chapter
-    }else{
-        variables.chapterName = chapter.currentTarget.arg;
-    }
+    variables.chapterName = chapter;
+    let lastPageFirst = false;if(variables.chapterList.indexOf(chapter)==variables.currentChapterIndex-1){lastPageFirst = true}
     variables.pageList = fs.readdirSync(variables.mangaLibrary+"\\"+variables.seriesName+"\\"+variables.chapterName);
     for (let index in variables.pageList){
         let nameSplit = variables.pageList[index].split(".")
