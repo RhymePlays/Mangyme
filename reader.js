@@ -4,7 +4,7 @@ const fs = require("fs");
 var variables = {
     mangaPageElem: document.getElementById("mangaPage"),
     pageZoomLevel: 95,
-    movingPower: 10,
+    movingPower: 25,
     totalPages: 0,
     currentPageIndex: 0,
     currentChapterIndex: 0,
@@ -19,10 +19,10 @@ var variables = {
     controls: {
         nextPage: "KeyQ",
         previousPage: "KeyE",
-        moveUp: "KeyW",
-        modeLeft: "KeyA",
-        moveDown: "KeyS",
-        moveRight: "KeyD",
+        moveUp: "KeyS",
+        modeLeft: "KeyD",
+        moveDown: "KeyW",
+        moveRight: "KeyA",
         zoomIn: "NumpadAdd",
         zoomInAlt: "Equal",
         zoomOut: "NumpadSubtract",
